@@ -1,0 +1,28 @@
+CREATE TABLE products
+(
+    id INT PRIMARY KEY NOT NULL,
+    name VARCHAR(100),
+    price_230 INT,
+    price_340 INT,
+    quantity INT,
+    description VARCHAR(1000),
+    image_path VARCHAR(255)
+)
+
+INSERT INTO products(id, name, price_230, price_340, quantity, description, image_path)
+VALUES(1, 'confiture de fraise', 4, 5, 15, 'confiture de fraise cuite au chaudron', 'path')
+
+INSERT INTO products(id, name, price_230, price_340, quantity, description, image_path)
+VALUES(2, 'confiture de cerise', 4, 5, 15, 'confiture de cerise cuite au chaudron', 'path')
+
+UPDATE products
+SET quantity = 27
+WHERE id = 2
+
+ALTER TABLE products
+ALTER COLUMN price_230 FLOAT(10)
+
+ALTER TABLE products
+ALTER COLUMN price_340 FLOAT(10)
+
+SELECT * FROM products
