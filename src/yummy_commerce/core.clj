@@ -122,6 +122,30 @@
   (ANY "/anything-goes" [] general-handler)
   (route/not-found "You Must Be New Here"))
 
+(defn get-product-res [req]
+  req)
+
+(defn create-product-res [req]
+  req)
+
+(defn update-product-res [req]
+  req)
+
+(defn delete-product-res [req]
+  req)
+
+(defn get-all-products-res [req]
+  req)
+
+(defn delete-all-products-res [req]
+  req)
+
+(defn get-season-products-res [req]
+  req)
+
+(defn process-payment-res [req]
+  req)
+
 
 (defroutes api-routes
   (GET "/:product-id" [] get-product-res)
@@ -139,7 +163,7 @@
   "App entry point"
   [& args]
   (let [port (Integer/parseInt (or (System/getenv "PORT") "8080"))]
-    (server/run-server app-routes {:port port})
+    (server/run-server api-routes {:port port})
     (println (str "Running webserver at http://127.0.0.1:" port "/"))))
 
 ;;launch server from repl
