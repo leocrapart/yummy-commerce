@@ -122,13 +122,16 @@
   (ANY "/anything-goes" [] general-handler)
   (route/not-found "You Must Be New Here"))
 
+
 (defroutes api-routes
-  (POST "/:product-id" [] create-product-res)
   (GET "/:product-id" [] get-product-res)
+  (POST "/:product-id" [] create-product-res)
   (PUT "/:product-id" [] update-product-res)
   (DEL "/:product-id" [] delete-product-res)
   (GET "/products" [] get-all-products-res)
-  (DEL "/products" [] delete-all-products-res))
+  (DEL "/products" [] delete-all-products-res)
+  (GET "/products/:season" [] get-season-products-res)
+  (POST "/payment" [] process-payment-res))
   
 
 
