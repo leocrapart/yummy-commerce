@@ -131,6 +131,8 @@
 
 
 
+;; get
+
 (defn get-product [product-id]
   {:id product-id
    :name "product-name"
@@ -158,7 +160,11 @@
 ;   true
 ;   false)
 
-(defn create-product [product-id]
+
+
+;; create
+
+(defn create-product [product-id product]
   {:id product-id
    :name "product-name"
    :description "description"
@@ -168,6 +174,25 @@
   {:status 201
    :headers json-header
    :body (json/write-str (create-product "fraise"))})
+
+(defn created-product-res [product]
+  {:status 201
+   :headers json-header
+   :body (json/write-str product)})
+
+(def not-created-product-res
+  {:status 405})
+
+(defn create-product-res [req]
+  (let [product-id ((req :params) :product-id)
+        payload "payload"
+        created-product (create-product product-id payload)]
+    (if created-product
+      (created-product-res created-product)
+      not-created-product-res)))
+
+
+;; update
 
 (defn update-product [product-id]
   {:id product-id
@@ -179,6 +204,8 @@
   {:status 200
    :headers json-header
    :body (json/write-str (update-product "fraise"))})
+
+;; delete
 
 (defn delete-product-res [req]
   {:status 200})
