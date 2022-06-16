@@ -54,89 +54,134 @@
 
 
 
-(defn fps-handler [req]
-  {:status 200
-   :headers {"Content-Type" "text/html"}
-   :body "Pew pew!"})
+; (defn fps-handler [req]
+;   {:status 200
+;    :headers {"Content-Type" "text/html"}
+;    :body "Pew pew!"})
 
 
-(defn fraise []
-  (get-product "'fraise'"))
+; (defn fraise []
+;   (get-product "'fraise'"))
 
-(defn fraise-str []
-  (json/write-str (fraise)))
+; (defn fraise-str []
+;   (json/write-str (fraise)))
 
-(defn fraise-handler [req]
-  {:status 200
-   :headers {"Content-Type" "text/json"}
-   :body (fraise-str)})
+; (defn fraise-handler [req]
+;   {:status 200
+;    :headers {"Content-Type" "text/json"}
+;    :body (fraise-str)})
 
 
-(defn product [id]
-  (get-product (str "'" id "'")))
+; (defn product [id]
+;   (get-product (str "'" id "'")))
  
-(defn product-str [id]
-  (json/write-str (product id)))
+; (defn product-str [id]
+;   (json/write-str (product id)))
 
-(product-str "coing-vanille")
+; (product-str "coing-vanille")
 
 
-(defn product-not-found-str [product-id]
-  (json/write-str {:error (str "Product '" product-id "' not found in database.")}))
+; (defn product-not-found-str [product-id]
+;   (json/write-str {:error (str "Product '" product-id "' not found in database.")}))
 
-(defn product-not-found-res [product-id]
-  {:status 404
-   :headers {"Content-Type" "text/json"}
-   :body (product-not-found-str product-id)})
+; (defn product-not-found-res [product-id]
+;   {:status 404
+;    :headers {"Content-Type" "text/json"}
+;    :body (product-not-found-str product-id)})
 
-(defn product-found-res [product-string]
-  {:status 200
-   :headers {"Content-Type" "text/json"}
-   :body product-string})
+; (defn product-found-res [product-string]
+;   {:status 200
+;    :headers {"Content-Type" "text/json"}
+;    :body product-string})
 
-(defn product-res [req]
-  (let [product-id ((req :params) :product-id)
-        product-string (product-str product-id)]
-    (if (= product-string "null")
-      (product-not-found-res product-id)
-      (product-found-res product-string))))
+; (defn product-res [req]
+;   (let [product-id ((req :params) :product-id)
+;         product-string (product-str product-id)]
+;     (if (= product-string "null")
+;       (product-not-found-res product-id)
+;       (product-found-res product-string))))
       
 
-(defn mail-man []
-  "{\"Spongebob Narrator\": \"5 years later...\"}")
+; (defn mail-man []
+;   "{\"Spongebob Narrator\": \"5 years later...\"}")
 
-(defn mail-handler [req]
-  {:status 200
-   :headers {"Content-Type" "text/json"}
-   :body (mail-man)})
+; (defn mail-handler [req]
+;   {:status 200
+;    :headers {"Content-Type" "text/json"}
+;    :body (mail-man)})
 
-(defn general-handler [req]
-  {:status 200
-   :headers {"Content-Type" "text/html"}
-   :body "All hail General Zod!"})
+; (defn general-handler [req]
+;   {:status 200
+;    :headers {"Content-Type" "text/html"}
+;    :body "All hail General Zod!"})
 
-(defroutes app-routes
-  (GET "/" [] fps-handler)
-  (GET "/:product-id" [] product-res)
-  (POST "/postoffice" [] mail-handler)
-  (ANY "/anything-goes" [] general-handler)
-  (route/not-found "You Must Be New Here"))
+; (defroutes app-routes
+;   (GET "/" [] fps-handler)
+;   (GET "/:product-id" [] product-res)
+;   (POST "/postoffice" [] mail-handler)
+;   (ANY "/anything-goes" [] general-handler)
+;   (route/not-found "You Must Be New Here"))
 
-(defn get-product-res [req]
-  {:id "product-id"
+
+(def html-header
+  {"Content-Type" "text/html"})
+
+(def json-header
+  {"Content-Type" "text/html"})
+
+
+
+(defn get-product [product-id]
+  {:id product-id
    :name "product-name"
    :description "description"
    :price "price"})
-   
+
+(defn product-found-res [product]
+  {:status 200
+   :headers json-header
+   :body (json/write-str product)})
+
+(defn product-not-found-res [product-id]
+  {:status 404
+   :headers json-header
+   :body (json/write-str {:msg (str "product " product-id " not found")})})
+  
+(defn get-product-res [req]
+  (let [product-id ((req :params) :product-id)
+        product (get-product product-id)]
+    (if product
+      (product-found-res product)
+      (product-not-found-res product-id))))
+      
+; (if (get-product "fraise")
+;   true
+;   false)
+
+(defn create-product [product-id]
+  {:id product-id
+   :name "product-name"
+   :description "description"
+   :price "price"})
 
 (defn create-product-res [req]
-  {:msg "success"})
+  {:status 201
+   :headers json-header
+   :body (json/write-str (create-product "fraise"))})
+
+(defn update-product [product-id]
+  {:id product-id
+   :name "product-name"
+   :description "description"
+   :price "price"})
 
 (defn update-product-res [req]
-  req)
+  {:status 200
+   :headers json-header
+   :body (json/write-str (update-product "fraise"))})
 
 (defn delete-product-res [req]
-  req)
+  {:status 200})
 
 (defn get-all-products-res [req]
   req)
@@ -152,12 +197,12 @@
 
 
 (defroutes api-routes
-  (GET "/:product-id" [] get-product-res)
-  (POST "/:product-id" [] create-product-res)
-  (PUT "/:product-id" [] update-product-res)
-  (DEL "/:product-id" [] delete-product-res)
+  (GET "/product/:product-id" [] get-product-res)
+  (POST "/product/:product-id" [] create-product-res)
+  (PUT "/product/:product-id" [] update-product-res)
+  (DELETE "/product/:product-id" [] delete-product-res)
   (GET "/products" [] get-all-products-res)
-  (DEL "/products" [] delete-all-products-res)
+  (DELETE "/products" [] delete-all-products-res)
   (GET "/products/:season" [] get-season-products-res)
   (POST "/payment" [] process-payment-res))
   
@@ -171,6 +216,6 @@
     (println (str "Running webserver at http://127.0.0.1:" port "/"))))
 
 ;;launch server from repl
-(-main)
+; (-main)
 
 
