@@ -130,7 +130,7 @@
    
 
 (defn create-product-res [req]
-  req)
+  {:msg "success"})
 
 (defn update-product-res [req]
   req)
