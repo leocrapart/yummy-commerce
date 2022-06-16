@@ -8,43 +8,43 @@
             [clojure.data.json :as json]))
 
 
-(defn open-db []
-  (pg/pool :host "dumbo.db.elephantsql.com" 
-           :user "dqgqrqev" 
-           :dbname "dqgqrqev" 
-           :password "rtDGlzTFU7lzeZHrMdQTMIZiFMjr4unD"))
+; (defn open-db []
+;   (pg/pool :host "dumbo.db.elephantsql.com" 
+;            :user "dqgqrqev" 
+;            :dbname "dqgqrqev" 
+;            :password "rtDGlzTFU7lzeZHrMdQTMIZiFMjr4unD"))
 
-(defn single-query [query-string]
-  (let [db (open-db)
-        query-result (jdbc/query db [query-string])
-        close-db (pg/close! db)]
-    query-result))
+; (defn single-query [query-string]
+;   (let [db (open-db)
+;         query-result (jdbc/query db [query-string])
+;         close-db (pg/close! db)]
+;     query-result))
 
-;; get
+; ;; get
 
-(defn get-product [id]
-  (let [query-result (single-query (str "SELECT * FROM products WHERE id =" id))
-        first-element (first query-result)]
-    first-element))
-
-
-;; post 
-
-(defn insert-product [product]
-  (single-query (str "INSERT INTO products(id, name, price_230, price_340, quantity, description) 
-    VALUES(" (product :id) "," (product :name) "," (product :price_230) "," (product :price_340) "," (product :quantity) "," (product :description) ");")))
+; (defn get-product [id]
+;   (let [query-result (single-query (str "SELECT * FROM products WHERE id =" id))
+;         first-element (first query-result)]
+;     first-element))
 
 
-(defn insert-product-magie []
-  (insert-product
-    {:id "'magie2'"
-     :name "''"
-     :price_230 4
-     :price_340 5
-     :quantity 0
-     :description "'super description2'"}))
+; ;; post 
 
-(insert-product-magie)
+; (defn insert-product [product]
+;   (single-query (str "INSERT INTO products(id, name, price_230, price_340, quantity, description) 
+;     VALUES(" (product :id) "," (product :name) "," (product :price_230) "," (product :price_340) "," (product :quantity) "," (product :description) ");")))
+
+
+; (defn insert-product-magie []
+;   (insert-product
+;     {:id "'magie2'"
+;      :name "''"
+;      :price_230 4
+;      :price_340 5
+;      :quantity 0
+;      :description "'super description2'"}))
+
+; (insert-product-magie)
 
 
 ; (def fraise (get-product "'fraise'"))
@@ -123,7 +123,11 @@
   (route/not-found "You Must Be New Here"))
 
 (defn get-product-res [req]
-  req)
+  {:id "product-id"
+   :name "product-name"
+   :description "description"
+   :price "price"})
+   
 
 (defn create-product-res [req]
   req)
