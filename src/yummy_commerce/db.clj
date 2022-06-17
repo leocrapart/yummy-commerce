@@ -1,6 +1,10 @@
 (ns db)
 
+;; mongo db stuff here
 
+
+
+;; api
 
 (defn get-product-by-id [id]
 	({:id "id"
