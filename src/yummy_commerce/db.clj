@@ -3,7 +3,6 @@
 ;; mongo db stuff here
 
 
-
 ;; api
 
 (defn get-product-by-id [id]
@@ -15,5 +14,10 @@
 
 (defn delete-product [product-id])
 
-(defn update-product [product])
+(defn update-product [new-product])
+
+
+(defn get-all-products [])
+
+(defn delete-all-products [])
 
