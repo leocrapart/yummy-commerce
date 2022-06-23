@@ -17,3 +17,6 @@
 
 (confiture-by-id "peche")
 (sucette-by-id "sucette-coeur")
+
+
+(:description (sucette-by-id "sucette-coeur"))
