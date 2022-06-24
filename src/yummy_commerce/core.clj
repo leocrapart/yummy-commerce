@@ -5,7 +5,8 @@
             [compojure.route :as route]
             [clj-postgresql.core :as pg]
             [clojure.java.jdbc :as jdbc]
-            [clojure.data.json :as json]))
+            [clojure.data.json :as json]
+            [yummy-commerce.mongodb :as db]))
 
 
 ; (defn open-db []
@@ -127,7 +128,7 @@
   {"Content-Type" "text/html"})
 
 (def json-header
-  {"Content-Type" "text/html"})
+  {"Content-Type" "text/json"})
 
 
 
@@ -223,12 +224,52 @@
   req)
 
 
+(defn get-confiture-res [req]
+  (let [id (get-in req [:params :id])
+        confiture (db/confiture-by-id id)]
+    {:status 200
+     :headers json-header
+     :body (json/write-str confiture)}))
+
+(defn get-sucette-res [req]
+  (let [id (get-in req [:params :id])
+        sucette (db/sucette-by-id id)]
+    {:status 200
+     :headers json-header
+     :body (json/write-str sucette)}))
+
+(defn get-confitures-res [req]
+  (let [confitures (db/confitures)]
+    {:status 200
+     :headers json-header
+     :body (json/write-str confitures)}))
+
+(clojure.string/split "season=ete" #"=")
+
+
+
+(defn get-sucettes-res [req]
+  (let [query-string (req :query-string)
+        season (nth (clojure.string/split query-string #"=") 1)
+        req2 (dissoc req :async-channel)]
+    {:status 200
+     :headers json-header
+     :body (json/write-str req2)}))
+
+
 (defroutes api-routes
+  (GET "/confitures/:id" [] get-confiture-res)
+  (GET "/sucettes/:id" [] get-sucette-res)
+  (GET "/confitures" [] get-confitures-res)
+  (GET "/sucettes" {params :params} [] get-sucettes-res)
+
+
+
+
   (GET "/product/:product-id" [] get-product-res)
   (POST "/product/:product-id" [] create-product-res)
   (PUT "/product/:product-id" [] update-product-res)
   (DELETE "/product/:product-id" [] delete-product-res)
-  (GET "/products" [] get-all-products-res)
   (DELETE "/products" [] delete-all-products-res)
   (GET "/products/:season" [] get-season-products-res)
   (POST "/payment" [] process-payment-res))
@@ -243,6 +284,6 @@
     (println (str "Running webserver at http://127.0.0.1:" port "/"))))
 
 ;;launch server from repl
-; (-main)
+(-main)
 
 

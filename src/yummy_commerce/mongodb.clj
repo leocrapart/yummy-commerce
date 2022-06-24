@@ -10,13 +10,31 @@
     (mg/connect-via-uri connection-string)))
 
 (defn confiture-by-id [id]
-  (mc/find-one-as-map db "confitures" {:id id}))
+  (dissoc 
+    (mc/find-one-as-map db "confitures" {:id id})
+    :_id))
 
 (defn sucette-by-id [id]
-  (mc/find-one-as-map db "sucettes" {:id id}))
+  (dissoc 
+    (mc/find-one-as-map db "sucettes" {:id id})
+    :_id))
+
+(defn dissoc-oid [document]
+  (dissoc document :_id))
+
+(defn confitures []
+  (map dissoc-oid
+    (mc/find-maps db "confitures")))
+
+(defn sucettes []
+  (map dissoc-oid
+    (mc/find-maps db "sucettes")))
 
 (confiture-by-id "peche")
 (sucette-by-id "sucette-coeur")
-
+(type (confitures))
+(nth (confitures) 1)
 
 (:description (sucette-by-id "sucette-coeur"))
+
+

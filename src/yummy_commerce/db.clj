@@ -1,4 +1,4 @@
-(ns db)
+(ns yummy-commerce.db)
 
 ;; mongo db stuff here
 
