@@ -32,6 +32,8 @@
 
 (confiture-by-id "peche")
 (sucette-by-id "sucette-coeur")
+(confitures)
+(sucettes)
 (type (confitures))
 (nth (confitures) 1)
 

@@ -52,14 +52,15 @@
       (map (fn [el] (clojure.string/split el #"="))
         (clojure.string/split "id=2&name=fraise&camion=tchoutchou" #"&")))))
 
-; (params "id=2&name=fraise&camion=tchoutchou")
+(params "id=2&name=fraise&camion=tchoutchou")
 
 (defn get-confitures-res [req]
-  (let [query-params (params (req :query-string))
-        season (query-params :season)]
-    {:status 200
-     :headers json-header
-     :body (json/write-str query-params)}))
+  {:status 200
+   :headers json-header
+   :body (json/write-str (db/confitures))})
+
+;; confiture-by-season
+
 
 (defn get-sucettes-res [req]
   {:status 200
@@ -67,11 +68,10 @@
    :body (json/write-str (db/sucettes))})
 
 
-
 (defroutes api-routes
   (GET "/confitures/:id" [] get-confiture-res)
   (GET "/sucettes/:id" [] get-sucette-res)
-  (GET "/confitures" get-confitures-res)
+  (GET "/confitures" [] get-confitures-res)
   (GET "/sucettes" [] get-sucettes-res))
   
 
