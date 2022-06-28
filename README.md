@@ -1,6 +1,15 @@
 # yummy-commerce
 
-FIXME: description
+Ecommerce backend designed to retrieve the stored food data in the MongoDb database and expose it for frontend.
+Will also be used to for stripe integration and to send emails.
+
+
+Future upgrades :
+- security 
+- deployed on digital ocean
+- stripe integration
+- send emails to client and seller
+
 
 ## Installation
 
