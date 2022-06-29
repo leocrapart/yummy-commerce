@@ -46,18 +46,63 @@
 
 (keywordized-vector ["id" "2"])
 
+(defn is-nil-or-empty-string [value]
+  (if value
+    (if (= "" value)
+      true
+      false)
+    true))
+
+; (is-nil-or-empty-string "")
+; (is-nil-or-empty-string nil)
+; (is-nil-or-empty-string "season")
+
 (defn params [query-string]
-  (into {}
-    (map keywordized-vector
-      (map (fn [el] (clojure.string/split el #"="))
-        (clojure.string/split "id=2&name=fraise&camion=tchoutchou" #"&")))))
+  (if (is-nil-or-empty-string query-string)
+    {}
+    (into {}
+      (map keywordized-vector
+        (map (fn [el] (clojure.string/split el #"="))
+          (clojure.string/split query-string #"&"))))))
 
-(params "id=2&name=fraise&camion=tchoutchou")
+; (params "id=2&name=fraise&camion=tchoutchou")
+; (params "season=été")
+; (params "")
+; (params nil)
+    
+(db/confitures-with-query (params "season=été"))
 
+;; v2
+; (defn get-confitures-res [req]
+;   (let [encoded-query-string (req :query-string)
+;         decoded-query-string (decoded-string64 encoded-query-string)
+;         params (params query-string)]
+;     {:status 200
+;      :headers json-header
+;      :body (json/write-str 
+;               (db/confitures-with-query params))}))
+
+(defn decoded-string64 [encoded-string64])
+
+;; dev
+; (defn get-confitures-res [req]
+;   {:status 200
+;    :headers json-header
+;    :body (json/write-str 
+;             (:query-string
+;               (dissoc req :async-channel)))})
+
+;; v1
 (defn get-confitures-res [req]
   {:status 200
    :headers json-header
-   :body (json/write-str (db/confitures))})
+   :body (json/write-str 
+            (db/confitures))})
+
+; (defn get-confitures-res [req]
+;   {:status 200
+;    :headers json-header
+;    :body (json/write-str (db/confitures))})
 
 ;; confiture-by-season
 
