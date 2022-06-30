@@ -7,7 +7,8 @@
                  [http-kit "2.5.3"]
                  [compojure "1.7.0"]
                  [org.clojure/data.json "2.4.0"]
-                 [com.novemberain/monger "3.6.0"]]
+                 [com.novemberain/monger "3.6.0"]
+                 [ring/ring-codec "1.1.3"]]
   :main ^:skip-aot yummy-commerce.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all

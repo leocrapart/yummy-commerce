@@ -26,3 +26,5 @@ ALTER TABLE products
 ALTER COLUMN price_340 FLOAT(10)
 
 SELECT * FROM products
+
+"mongodb+srv://leo:vd6QwddBt2Tl88y2@cluster0.huek09w.mongodb.net/products?retryWrites=true&w=majority"

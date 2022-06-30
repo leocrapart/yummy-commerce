@@ -1,20 +1,18 @@
 (ns yummy-commerce.core
   (:gen-class)
-  (:require [org.httpkit.server :as server]
-            [compojure.core :refer :all]
+  (:require [compojure.core :refer :all]
             [compojure.route :as route]
             [clojure.data.json :as json]
+            [org.httpkit.server :as server]
+            [ring.util.codec :as codec]
             [yummy-commerce.mongodb :as db]))
-
+            
 
 (def html-header
   {"Content-Type" "text/html"})
 
 (def json-header
   {"Content-Type" "text/json"})
-
-
-;;
 
 
 (defn get-confiture-res [req]
@@ -31,20 +29,6 @@
      :headers json-header
      :body (json/write-str sucette)}))
 
-;; query string decode
-;; recur take key,=, take value
-;; parse-value
-;; key to keyword
-;;return param map
-
-;; id=2&name=fraise&camion=tchoutchou
-;; => {:id "2" :name "fraise" :camion "tcoutchou"}
-
-(defn keywordized-vector [vector]
-  [(keyword (nth vector 0)) (nth vector 1)])
-
-
-(keywordized-vector ["id" "2"])
 
 (defn is-nil-or-empty-string [value]
   (if value
@@ -57,54 +41,40 @@
 ; (is-nil-or-empty-string nil)
 ; (is-nil-or-empty-string "season")
 
+(defn decoded-query-string [query-string]
+  (clojure.walk/keywordize-keys (codec/form-decode query-string)))
+
+; (decoded-query-string "id=2&name=fraise&camion=tchoutchou")
+; (decoded-query-string "season=été")
+
 (defn params [query-string]
   (if (is-nil-or-empty-string query-string)
     {}
-    (into {}
-      (map keywordized-vector
-        (map (fn [el] (clojure.string/split el #"="))
-          (clojure.string/split query-string #"&"))))))
+    (decoded-query-string query-string)))
 
 ; (params "id=2&name=fraise&camion=tchoutchou")
 ; (params "season=été")
 ; (params "")
 ; (params nil)
     
-(db/confitures-with-query (params "season=été"))
 
-;; v2
-; (defn get-confitures-res [req]
-;   (let [encoded-query-string (req :query-string)
-;         decoded-query-string (decoded-string64 encoded-query-string)
-;         params (params query-string)]
-;     {:status 200
-;      :headers json-header
-;      :body (json/write-str 
-;               (db/confitures-with-query params))}))
+(defn get-confitures-res [req]
+  (let [query-string (req :query-string)
+        params (params query-string)]
+    {:status 200
+     :headers json-header
+     :body (json/write-str 
+              (db/confitures-with-query params))}))
 
-(defn decoded-string64 [encoded-string64])
+; (db/confitures-with-query (params "season=été"))
 
-;; dev
+
+;; dev - see req 
 ; (defn get-confitures-res [req]
 ;   {:status 200
 ;    :headers json-header
 ;    :body (json/write-str 
-;             (:query-string
-;               (dissoc req :async-channel)))})
-
-;; v1
-(defn get-confitures-res [req]
-  {:status 200
-   :headers json-header
-   :body (json/write-str 
-            (db/confitures))})
-
-; (defn get-confitures-res [req]
-;   {:status 200
-;    :headers json-header
-;    :body (json/write-str (db/confitures))})
-
-;; confiture-by-season
+;               (dissoc req :async-channel))})
 
 
 (defn get-sucettes-res [req]
@@ -119,7 +89,6 @@
   (GET "/confitures" [] get-confitures-res)
   (GET "/sucettes" [] get-sucettes-res))
   
-
 
 (defn -main
   "App entry point"

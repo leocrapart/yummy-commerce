@@ -2,8 +2,8 @@
   (:require [monger.core :as mg]
             [monger.collection :as mc]))
 
+(def connection-string "")
 
-(def connection-string "mongodb+srv://leo:vd6QwddBt2Tl88y2@cluster0.huek09w.mongodb.net/products?retryWrites=true&w=majority")
 
 (def db
   (:db
