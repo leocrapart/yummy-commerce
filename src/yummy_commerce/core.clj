@@ -52,10 +52,10 @@
     {}
     (decoded-query-string query-string)))
 
-; (params "id=2&name=fraise&camion=tchoutchou")
-; (params "season=été")
-; (params "")
-; (params nil)
+(params "id=2&name=fraise&camion=tchoutchou")
+(params "season=été")
+(params "")
+(params nil)
     
 
 (defn get-confitures-res [req]
@@ -98,6 +98,6 @@
     (println (str "Running webserver at http://127.0.0.1:" port "/"))))
 
 ;;launch server from repl
-; (-main)
+(-main)
 
 
